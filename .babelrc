@@ -1,0 +1,9 @@
+{
+  "sourceMaps": "inline",
+  "comments": false,
+  "sourceRoot": "src",
+  "presets": [
+    "es2015",
+    "babel-preset-flow"
+  ]
+}
