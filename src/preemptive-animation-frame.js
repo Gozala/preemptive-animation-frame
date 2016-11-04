@@ -46,8 +46,18 @@ export const cancelAnimationFrame =
   }
 
 export const forceAnimationFrame =
-  (time:Time=now()) =>
-  performAnimationFrame(time)
+  (time:Time=now()) => {
+    switch (state) {
+      case NO_REQUEST:
+        break
+      default:
+        if (requestID != null) {
+          RAF.cancelAnimationFrame(requestID)
+          requestID = null
+        }
+        performAnimationFrame(time)
+    }
+  }
 
 const performAnimationFrame =
   (time:Time) => {
