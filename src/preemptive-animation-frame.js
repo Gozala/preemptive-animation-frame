@@ -1,5 +1,7 @@
 /* @flow */
 
+import * as RAF from "request-polyfilled-animation-frame"
+
 type Time = number
 type State = 0 | 1 | 2
 
@@ -11,6 +13,7 @@ const NO_REQUEST = 0
 const PENDING_REQUEST = 1
 const EXTRA_REQUEST = 2
 
+let requestID:?number = null
 let nextID:number = 0
 let state:State = NO_REQUEST
 let requests:Array<(time:Time) => any> = []
@@ -18,10 +21,12 @@ let ids:Array<number> = []
 
 const absent = new Error('absent')
 
+export const now = RAF.now
+
 export const requestAnimationFrame = <a>
   (request:(time:Time) => a) => {
     if (state === NO_REQUEST) {
-      window.requestAnimationFrame(performAnimationFrame)
+      requestID = RAF.requestAnimationFrame(performAnimationFrame)
     }
 
     const id = ++nextID
@@ -41,7 +46,7 @@ export const cancelAnimationFrame =
   }
 
 export const forceAnimationFrame =
-  (time:Time=window.performance.now()) =>
+  (time:Time=now()) =>
   performAnimationFrame(time)
 
 const performAnimationFrame =
@@ -57,7 +62,7 @@ const performAnimationFrame =
         // needed, but we make an extra frame request just in
         // case. It's possible to drop a frame if frame is requested
         // too late, so we just do it preemptively.
-        window.requestAnimationFrame(performAnimationFrame)
+        requestID = RAF.requestAnimationFrame(performAnimationFrame)
         state = EXTRA_REQUEST
         ids.splice(0)
         dispatchAnimationFrame(requests.splice(0), 0, time)
