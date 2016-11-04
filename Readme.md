@@ -28,6 +28,20 @@ const requestID = PAF.requestAnimationFrame(time => {
 PAF.cancelAnimationFrame(requestID)
 ```
 
+## Unstable API
+
+You can force animation frame to fire at your demand with `forceAnimationFrame`
+
+```js
+PAF.forceAnimationFrame()
+```
+
+Library internally uses [`performance.now()`][performance-now] polyfill, if you use it in conjunction with this library consider using exported `now` function to have consistent starting point for produced timestamps.
+
+```js
+PAF.now()
+```
+
 [window.requestAnimationFrame]:https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
 [travis-image]: https://travis-ci.org/Gozala/preemptive-animation-frame.svg?branch=master
 [travis-url]: https://travis-ci.org/Gozala/preemptive-animation-frame
@@ -37,3 +51,4 @@ PAF.cancelAnimationFrame(requestID)
 [downloads-url]: https://npmjs.org/package/preemptive-animation-frame
 [standard-image]:https://img.shields.io/badge/code%20style-standard-brightgreen.svg
 [standard-url]:http://standardjs.com/
+[performance-now]:https://www.npmjs.com/package/performance-now
