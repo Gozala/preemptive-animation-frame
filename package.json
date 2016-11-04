@@ -1,7 +1,7 @@
 {
   "name": "preemptive-animation-frame",
   "id": "preemptive-animation-frame",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Preemptive requestAnimationFrame",
   "keywords": [
     "requestAnimationFrame",
