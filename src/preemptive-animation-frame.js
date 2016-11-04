@@ -1,6 +1,6 @@
 /* @flow */
 
-import * as RAF from "request-polyfilled-animation-frame"
+import * as RAF from 'request-polyfilled-animation-frame'
 
 type Time = number
 type State = 0 | 1 | 2
@@ -23,18 +23,17 @@ const absent = new Error('absent')
 
 export const now = RAF.now
 
-export const requestAnimationFrame = <a>
-  (request:(time:Time) => a) => {
-    if (state === NO_REQUEST) {
-      requestID = RAF.requestAnimationFrame(performAnimationFrame)
-    }
-
-    const id = ++nextID
-    requests.push(request)
-    ids.push(id)
-    state = PENDING_REQUEST
-    return id
+export const requestAnimationFrame = <a> (request:(time:Time) => a) => {
+  if (state === NO_REQUEST) {
+    requestID = RAF.requestAnimationFrame(performAnimationFrame)
   }
+
+  const id = ++nextID
+  requests.push(request)
+  ids.push(id)
+  state = PENDING_REQUEST
+  return id
+}
 
 export const cancelAnimationFrame =
   (id:number):void => {
@@ -86,28 +85,26 @@ const performAnimationFrame =
     }
   }
 
-const dispatchAnimationFrame = <a>
-  (requests:Array<(time:Time) => a>
-  , index:number
-  , time:Time
-  ) => {
-    let exception = absent
-    const count = requests.length
-    try {
-      while (index < count) {
-        const request = requests[index]
-        index = index + 1
-        request(time)
-      }
-    } catch (error) {
-      exception = error
+const dispatchAnimationFrame = <a> (requests:Array<(time:Time) => a>,
+                                    index:number,
+                                    time:Time) => {
+  let exception = absent
+  const count = requests.length
+  try {
+    while (index < count) {
+      const request = requests[index]
+      index = index + 1
+      request(time)
     }
-
-    if (index < count) {
-      dispatchAnimationFrame(requests, index, time)
-    }
-
-    if (exception !== absent) {
-      throw exception
-    }
+  } catch (error) {
+    exception = error
   }
+
+  if (index < count) {
+    dispatchAnimationFrame(requests, index, time)
+  }
+
+  if (exception !== absent) {
+    throw exception
+  }
+}
